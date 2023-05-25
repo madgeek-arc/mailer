@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Service
@@ -15,7 +15,7 @@ public class MailerService implements Mailer {
 
     private static final Logger logger = LoggerFactory.getLogger(MailerService.class);
 
-    private final Map<String, Session> sessionMap = new HashMap<>();
+    private final Map<String, Session> sessionMap = new LinkedHashMap<>();
 
 
     public MailerService(MailerProperties mailerProperties) {

@@ -3,14 +3,14 @@ package gr.athenarc.messaging.mailer.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Component
 @ConfigurationProperties(prefix = "mailer")
 public class MailerProperties {
 
-    private final Map<String, Mail> mail = new HashMap<>();
+    private final Map<String, Mail> mail = new LinkedHashMap<>();
 
     public Map<String, Mail> getMail() {
         return this.mail;
