@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 
 @Service
 public class MailerService implements Mailer {
@@ -19,8 +20,12 @@ public class MailerService implements Mailer {
 
 
     public MailerService(MailerProperties mailerProperties) {
-        for (Map.Entry<String, MailerProperties.Mail> mailEntry : mailerProperties.getMail().entrySet()) {
-            sessionMap.put(mailEntry.getKey(), MailSessionUtils.createSession(mailEntry.getValue()));
+        for (Map.Entry<String, MailerProperties.Config> mailEntry : mailerProperties.getMailer().entrySet()) {
+            try {
+                sessionMap.put(mailEntry.getKey(), MailSessionUtils.createSession(mailEntry.getValue()));
+            } catch (RuntimeException e) {
+                logger.error("Could not create session for provider: " + mailEntry.getKey(), e);
+            }
         }
     }
 

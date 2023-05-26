@@ -5,21 +5,22 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 
 @Component
-@ConfigurationProperties(prefix = "mailer")
+@ConfigurationProperties(prefix = "mail")
 public class MailerProperties {
 
-    private final Map<String, Mail> mail = new LinkedHashMap<>();
+    private final Map<String, Config> mailer = new LinkedHashMap<>();
 
-    public Map<String, Mail> getMail() {
-        return this.mail;
+    public Map<String, Config> getMailer() {
+        return mailer;
     }
 
-    public static class Mail {
+    public static class Config {
         String username;
         String password;
-        Smtp smtp;
+        Properties props;
 
         public String getUsername() {
             return username;
@@ -37,51 +38,12 @@ public class MailerProperties {
             this.password = password;
         }
 
-        public Smtp getSmtp() {
-            return smtp;
+        public Properties getProps() {
+            return props;
         }
 
-        public void setSmtp(Smtp smtp) {
-            this.smtp = smtp;
-        }
-    }
-
-    public static class Smtp {
-        String host;
-        String port;
-        boolean auth = true;
-        boolean starttlsEnable = true;
-
-        public String getHost() {
-            return host;
-        }
-
-        public void setHost(String host) {
-            this.host = host;
-        }
-
-        public String getPort() {
-            return port;
-        }
-
-        public void setPort(String port) {
-            this.port = port;
-        }
-
-        public boolean isAuth() {
-            return auth;
-        }
-
-        public void setAuth(boolean auth) {
-            this.auth = auth;
-        }
-
-        public boolean isStarttlsEnable() {
-            return starttlsEnable;
-        }
-
-        public void setStarttlsEnable(boolean starttlsEnable) {
-            this.starttlsEnable = starttlsEnable;
+        public void setProps(Properties props) {
+            this.props = props;
         }
     }
 }

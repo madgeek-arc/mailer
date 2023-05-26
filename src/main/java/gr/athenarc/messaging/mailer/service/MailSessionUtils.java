@@ -9,22 +9,16 @@ import java.util.Properties;
 
 public class MailSessionUtils {
 
-    public static Session createSession(MailerProperties.Mail provider) {
+    public static Session createSession(MailerProperties.Config config) {
 
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", provider.getSmtp().isAuth());
-        props.put("mail.smtp.starttls.enable", provider.getSmtp().isStarttlsEnable());
-        props.put("mail.smtp.host", provider.getSmtp().getHost());
-        props.put("mail.smtp.port", provider.getSmtp().getPort());
-
-        //create the Session object
         Authenticator authenticator = new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(provider.getUsername(), provider.getPassword());
+                return new PasswordAuthentication(config.getUsername(), config.getPassword());
             }
         };
 
-        return Session.getInstance(props, authenticator);
+        //create the Session object
+        return Session.getInstance(config.getProps(), authenticator);
     }
 
     private MailSessionUtils() {
