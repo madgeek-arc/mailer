@@ -31,6 +31,9 @@ public interface Mailer {
             message.setRecipients(Message.RecipientType.TO, toAddressArray(emailMessage.getTo()));
             message.setRecipients(Message.RecipientType.CC, toAddressArray(emailMessage.getCc()));
             message.setRecipients(Message.RecipientType.BCC, toAddressArray(emailMessage.getBcc()));
+
+            message.setSubject(emailMessage.getSubject());
+            message.setText(emailMessage.getText());
         } catch (MessagingException e) {
             logger.error(e.getMessage(), e);
         }
