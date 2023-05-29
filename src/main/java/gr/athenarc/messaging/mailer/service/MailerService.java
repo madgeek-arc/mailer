@@ -1,15 +1,19 @@
 package gr.athenarc.messaging.mailer.service;
 
+import gr.athenarc.messaging.mailer.EmailMessage;
 import gr.athenarc.messaging.mailer.config.MailerProperties;
 import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 
 @Service
 public class MailerService implements Mailer {
@@ -45,12 +49,16 @@ public class MailerService implements Mailer {
     }
 
     @Override
-    public void createMessage() {
-
-    }
-
-    @Override
-    public void sendMail(Message message) {
-
+    public Session getSessionFromHost(EmailMessage emailMessage) {
+        for (Map.Entry<String, Session> entry : sessionMap.entrySet()) {
+            String from = entry.getValue().getProperties().get("mail.from").toString();
+            if (from != null && from.equals(emailMessage.getFrom())) {
+                return entry.getValue();
+            } else if (emailMessage.getFrom().contains(entry.getKey())) {
+                return entry.getValue();
+            }
+        }
+        logger.warn("No mailer session found for sender, attempting to use default");
+        return getSession();
     }
 }
