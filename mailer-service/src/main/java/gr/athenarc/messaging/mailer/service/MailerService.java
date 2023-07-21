@@ -1,6 +1,6 @@
 package gr.athenarc.messaging.mailer.service;
 
-import gr.athenarc.messaging.mailer.EmailMessage;
+import gr.athenarc.messaging.mailer.domain.EmailMessage;
 import jakarta.mail.*;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public interface Mailer {
+public interface MailerService extends Mailer {
 
-    Logger logger = LoggerFactory.getLogger(Mailer.class);
+    Logger logger = LoggerFactory.getLogger(MailerService.class);
 
     Session getSession();
 

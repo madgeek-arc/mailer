@@ -1,4 +1,4 @@
-package gr.athenarc.messaging.mailer;
+package gr.athenarc.messaging.mailer.domain;
 
 import java.util.List;
 
@@ -60,5 +60,17 @@ public class EmailMessage {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return "EmailMessage{" +
+                "from='" + from + '\'' +
+                ", to=" + to +
+                ", cc=" + cc +
+                ", bcc=" + bcc +
+                ", subject='" + subject + '\'' +
+                ", text='" + text + '\'' +
+                '}';
     }
 }

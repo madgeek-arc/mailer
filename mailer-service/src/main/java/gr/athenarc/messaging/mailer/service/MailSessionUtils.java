@@ -5,8 +5,6 @@ import jakarta.mail.Authenticator;
 import jakarta.mail.PasswordAuthentication;
 import jakarta.mail.Session;
 
-import java.util.Properties;
-
 public class MailSessionUtils {
 
     public static Session createSession(MailerProperties.Config config) {

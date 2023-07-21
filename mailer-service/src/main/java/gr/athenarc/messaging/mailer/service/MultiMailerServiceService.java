@@ -1,13 +1,8 @@
 package gr.athenarc.messaging.mailer.service;
 
-import gr.athenarc.messaging.mailer.EmailMessage;
 import gr.athenarc.messaging.mailer.config.MailerProperties;
-import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
+import gr.athenarc.messaging.mailer.domain.EmailMessage;
 import jakarta.mail.Session;
-import jakarta.mail.Transport;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,14 +11,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Service
-public class MailerService implements Mailer {
+public class MultiMailerServiceService implements MailerService {
 
-    private static final Logger logger = LoggerFactory.getLogger(MailerService.class);
+    private static final Logger logger = LoggerFactory.getLogger(MultiMailerServiceService.class);
 
     private final Map<String, Session> sessionMap = new LinkedHashMap<>();
 
 
-    public MailerService(MailerProperties mailerProperties) {
+    public MultiMailerServiceService(MailerProperties mailerProperties) {
         for (Map.Entry<String, MailerProperties.Config> mailEntry : mailerProperties.getMailer().entrySet()) {
             try {
                 sessionMap.put(mailEntry.getKey(), MailSessionUtils.createSession(mailEntry.getValue()));
