@@ -20,6 +20,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
             <artifactId>mailer-core</artifactId>
             <groupId>gr.athenarc.messaging</groupId>
             <version>0.0.1-SNAPSHOT</version>
