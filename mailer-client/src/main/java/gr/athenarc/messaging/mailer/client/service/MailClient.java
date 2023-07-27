@@ -24,9 +24,10 @@ public class MailClient implements Mailer {
     @Override
     public void sendMail(EmailMessage emailMessage) {
         String path = UriComponentsBuilder.newInstance()
-                .host(mailClientProperties.getClient().getHost())
+                .fromHttpUrl(mailClientProperties.getClient().getHost())
                 .path(RelativePaths.MAILS)
                 .build()
+                .encode()
                 .toUri()
                 .toString();
         logger.debug("Sending email to: {}\nMessage: {}", path, emailMessage);
