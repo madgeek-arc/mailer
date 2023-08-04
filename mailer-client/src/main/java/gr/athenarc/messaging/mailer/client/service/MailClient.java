@@ -6,6 +6,9 @@ import gr.athenarc.messaging.mailer.domain.EmailMessage;
 import gr.athenarc.messaging.mailer.service.Mailer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -23,14 +26,17 @@ public class MailClient implements Mailer {
 
     @Override
     public void sendMail(EmailMessage emailMessage) {
-        String path = UriComponentsBuilder.newInstance()
+        String path = UriComponentsBuilder
                 .fromHttpUrl(mailClientProperties.getClient().getHost())
                 .path(RelativePaths.MAILS)
                 .build()
                 .encode()
                 .toUri()
                 .toString();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<EmailMessage> emailEntity = new HttpEntity<>(emailMessage, headers);
         logger.debug("Sending email to: {}\nMessage: {}", path, emailMessage);
-        restTemplate.postForObject(path, emailMessage, Void.class);
+        restTemplate.postForObject(path, emailEntity, Void.class);
     }
 }

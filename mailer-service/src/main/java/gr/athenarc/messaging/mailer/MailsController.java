@@ -1,8 +1,9 @@
 package gr.athenarc.messaging.mailer;
 
-import gr.athenarc.messaging.mailer.service.MailerService;
 import gr.athenarc.messaging.mailer.domain.EmailMessage;
+import gr.athenarc.messaging.mailer.service.MailerService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +20,7 @@ public class MailsController {
         this.mailerService = mailerService;
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> send(@RequestBody EmailMessage message) {
         mailerService.sendMail(message);
         return new ResponseEntity<>(HttpStatus.CREATED);
