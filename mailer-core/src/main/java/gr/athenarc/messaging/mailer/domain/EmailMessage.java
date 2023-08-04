@@ -14,6 +14,15 @@ public class EmailMessage {
     public EmailMessage() {
     }
 
+    public EmailMessage(EmailBuilder builder) {
+        this.from = builder.from;
+        this.to = builder.to;
+        this.cc = builder.cc;
+        this.bcc = builder.bcc;
+        this.subject = builder.subject;
+        this.text = builder.text;
+    }
+
     public String getFrom() {
         return from;
     }
@@ -72,5 +81,79 @@ public class EmailMessage {
                 ", subject='" + subject + '\'' +
                 ", text='" + text + '\'' +
                 '}';
+    }
+
+    public static class EmailBuilder {
+        String from;
+        List<String> to;
+        List<String> cc;
+        List<String> bcc;
+        String subject;
+        String text;
+
+        public EmailBuilder() {}
+
+        public EmailBuilder(String from, List<String> to) {
+            this.from = from;
+            this.to = to;
+        }
+
+        public String getFrom() {
+            return from;
+        }
+
+        public EmailBuilder setFrom(String from) {
+            this.from = from;
+            return this;
+        }
+
+        public List<String> getTo() {
+            return to;
+        }
+
+        public EmailBuilder setTo(List<String> to) {
+            this.to = to;
+            return this;
+        }
+
+        public List<String> getCc() {
+            return cc;
+        }
+
+        public EmailBuilder setCc(List<String> cc) {
+            this.cc = cc;
+            return this;
+        }
+
+        public List<String> getBcc() {
+            return bcc;
+        }
+
+        public EmailBuilder setBcc(List<String> bcc) {
+            this.bcc = bcc;
+            return this;
+        }
+
+        public String getSubject() {
+            return subject;
+        }
+
+        public EmailBuilder setSubject(String subject) {
+            this.subject = subject;
+            return this;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public EmailBuilder setText(String text) {
+            this.text = text;
+            return this;
+        }
+
+        public EmailMessage build() {
+            return new EmailMessage(this);
+        }
     }
 }
