@@ -46,7 +46,7 @@ public class MultiMailerServiceService implements MailerService {
     @Override
     public Session getSessionFromHost(EmailMessage emailMessage) {
         for (Map.Entry<String, Session> entry : sessionMap.entrySet()) {
-            String from = entry.getValue().getProperties().get("mail.from").toString();
+            String from = (String) entry.getValue().getProperties().get("mail.from");
             if (from != null && from.equals(emailMessage.getFrom())) {
                 return entry.getValue();
             } else if (emailMessage.getFrom().contains(entry.getKey())) {
