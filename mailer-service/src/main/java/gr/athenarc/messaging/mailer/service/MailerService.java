@@ -8,6 +8,7 @@ import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,14 +28,14 @@ public interface MailerService extends Mailer {
         Message message = new MimeMessage(session);
 
         try {
-            message.setFrom(new InternetAddress(emailMessage.getFrom()));
+            message.setFrom(new InternetAddress(emailMessage.getFrom(), (String) session.getProperties().get("mail.display-name")));
             message.setRecipients(Message.RecipientType.TO, toAddressArray(emailMessage.getTo()));
             message.setRecipients(Message.RecipientType.CC, toAddressArray(emailMessage.getCc()));
             message.setRecipients(Message.RecipientType.BCC, toAddressArray(emailMessage.getBcc()));
 
             message.setSubject(emailMessage.getSubject() != null ? emailMessage.getSubject() : "[No Subject]");
             message.setText(emailMessage.getText() != null ? emailMessage.getText() : "");
-        } catch (MessagingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             logger.error(e.getMessage(), e);
         }
 
