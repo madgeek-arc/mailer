@@ -23,9 +23,9 @@ public interface MailerService extends Mailer {
 
     Session getSessionFromHost(EmailMessage emailMessage);
 
-    default Message createMessage(EmailMessage emailMessage) {
+    default MimeMessage createMessage(EmailMessage emailMessage) {
         Session session = getSessionFromHost(emailMessage);
-        Message message = new MimeMessage(session);
+        MimeMessage message = new MimeMessage(session);
 
         try {
             message.setFrom(new InternetAddress(emailMessage.getFrom(), (String) session.getProperties().get("mail.display-name")));
@@ -35,6 +35,9 @@ public interface MailerService extends Mailer {
 
             message.setSubject(emailMessage.getSubject() != null ? emailMessage.getSubject() : "[No Subject]");
             message.setText(emailMessage.getText() != null ? emailMessage.getText() : "");
+            if (emailMessage.isHtml()) {
+                message.setText(emailMessage.getText() != null ? emailMessage.getText() : "", "utf-8", "html");
+            }
         } catch (MessagingException | UnsupportedEncodingException e) {
             logger.error(e.getMessage(), e);
         }

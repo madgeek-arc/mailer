@@ -10,6 +10,7 @@ public class EmailMessage {
     List<String> bcc;
     String subject;
     String text;
+    boolean html;
 
     public EmailMessage() {
     }
@@ -21,6 +22,7 @@ public class EmailMessage {
         this.bcc = builder.bcc;
         this.subject = builder.subject;
         this.text = builder.text;
+        this.html = builder.html;
     }
 
     public String getFrom() {
@@ -71,6 +73,14 @@ public class EmailMessage {
         this.text = text;
     }
 
+    public boolean isHtml() {
+        return html;
+    }
+
+    public void setHtml(boolean html) {
+        this.html = html;
+    }
+
     @Override
     public String toString() {
         return "EmailMessage{" +
@@ -80,6 +90,7 @@ public class EmailMessage {
                 ", bcc=" + bcc +
                 ", subject='" + subject + '\'' +
                 ", text='" + text + '\'' +
+                ", html='" + html + '\'' +
                 '}';
     }
 
@@ -90,8 +101,10 @@ public class EmailMessage {
         List<String> bcc;
         String subject;
         String text;
+        boolean html;
 
-        public EmailBuilder() {}
+        public EmailBuilder() {
+        }
 
         public EmailBuilder(String from, List<String> to) {
             this.from = from;
@@ -149,6 +162,15 @@ public class EmailMessage {
 
         public EmailBuilder setText(String text) {
             this.text = text;
+            return this;
+        }
+
+        public boolean isHtml() {
+            return html;
+        }
+
+        public EmailBuilder setHtml(boolean html) {
+            this.html = html;
             return this;
         }
 
