@@ -10,7 +10,7 @@
 
     <groupId>gr.athenarc.messaging</groupId>
     <artifactId>mailer-service</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     <name>mailer-service</name>
 
     <dependencies>
@@ -70,9 +70,4 @@
             </plugin>
         </plugins>
     </build>
-
-
-  <scm>
-    <tag>mailer-0.1.0</tag>
-  </scm>
 </project>

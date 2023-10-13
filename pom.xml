@@ -4,7 +4,7 @@
 
     <groupId>gr.athenarc.messaging</groupId>
     <artifactId>mailer</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     <name>mailer</name>
     <packaging>pom</packaging>
 
@@ -35,7 +35,7 @@
         <connection>scm:git:git@github.com:madgeek-arc/mailer.git</connection>
         <developerConnection>scm:git:git@github.com:madgeek-arc/mailer.git</developerConnection>
         <url>https://github.com/madgeek-arc/mailer.git</url>
-        <tag>mailer-0.1.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
