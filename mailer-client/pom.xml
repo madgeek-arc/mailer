@@ -10,7 +10,7 @@
 
     <groupId>gr.athenarc.messaging</groupId>
     <artifactId>mailer-client</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>mailer-client</name>
 
     <dependencies>
@@ -61,9 +61,4 @@
             <url>https://repo.openminted.eu/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
-
-
-  <scm>
-    <tag>mailer-0.0.1</tag>
-  </scm>
 </project>

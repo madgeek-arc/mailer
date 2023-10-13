@@ -10,7 +10,7 @@
 
     <groupId>gr.athenarc.messaging</groupId>
     <artifactId>mailer-core</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>mailer-core</name>
@@ -40,9 +40,4 @@
             <url>https://repo.openminted.eu/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
-
-
-  <scm>
-    <tag>mailer-0.0.1</tag>
-  </scm>
 </project>
