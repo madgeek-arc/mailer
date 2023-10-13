@@ -59,6 +59,21 @@
 
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>omtd-releases</id>
+            <layout>default</layout>
+            <url>https://repo.openminted.eu/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>omtd-snapshots</id>
+            <layout>default</layout>
+            <url>https://repo.openminted.eu/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
