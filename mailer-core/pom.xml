@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.2</version>
+        <version>3.4.1</version>
         <relativePath />
     </parent>
 
@@ -29,15 +29,15 @@
     <distributionManagement>
         <repository>
             <uniqueVersion>true</uniqueVersion>
-            <id>omtd-releases</id>
+            <id>madgik-releases</id>
             <layout>default</layout>
-            <url>https://repo.openminted.eu/content/repositories/releases</url>
+            <url>https://repo.madgik.di.uoa.gr/content/repositories/releases</url>
         </repository>
         <snapshotRepository>
             <uniqueVersion>true</uniqueVersion>
-            <id>omtd-snapshots</id>
+            <id>madgik-snapshots</id>
             <layout>default</layout>
-            <url>https://repo.openminted.eu/content/repositories/snapshots</url>
+            <url>https://repo.madgik.di.uoa.gr/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
