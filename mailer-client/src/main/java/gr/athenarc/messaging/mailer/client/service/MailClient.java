@@ -6,21 +6,19 @@ import gr.athenarc.messaging.mailer.domain.EmailMessage;
 import gr.athenarc.messaging.mailer.service.Mailer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public class MailClient implements Mailer {
 
     private static final Logger logger = LoggerFactory.getLogger(MailClient.class);
     private final MailClientProperties mailClientProperties;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestClient restClient;
 
-    public MailClient(MailClientProperties mailClientProperties) {
+    public MailClient(MailClientProperties mailClientProperties, RestClient restClient) {
         this.mailClientProperties = mailClientProperties;
+        this.restClient = restClient;
     }
 
     @Override
@@ -32,10 +30,12 @@ public class MailClient implements Mailer {
                 .encode()
                 .toUri()
                 .toString();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<EmailMessage> emailEntity = new HttpEntity<>(emailMessage, headers);
         logger.debug("Sending email to: {}\nMessage: {}", path, emailMessage);
-        restTemplate.postForObject(path, emailEntity, Void.class);
+        restClient.post()
+                .uri(path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(emailMessage)
+                .retrieve()
+                .toBodilessEntity();
     }
 }
