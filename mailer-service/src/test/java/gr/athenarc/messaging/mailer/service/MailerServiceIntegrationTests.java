@@ -1,5 +1,6 @@
 package gr.athenarc.messaging.mailer.service;
 
+import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetup;
@@ -22,6 +23,14 @@ class MailerServiceIntegrationTests {
 
 	@RegisterExtension
 	static final GreenMailExtension secondary = new GreenMailExtension(ServerSetup.SMTP.dynamicPort());
+
+	@RegisterExtension
+	static final GreenMailExtension authenticated = new GreenMailExtension(ServerSetup.SMTP.dynamicPort())
+			.withConfiguration(GreenMailConfiguration.aConfig().withUser("sender@example.org", "sender", "secret"));
+
+	@RegisterExtension
+	static final GreenMailExtension tls = new GreenMailExtension(ServerSetup.SMTPS.dynamicPort())
+			.withConfiguration(GreenMailConfiguration.aConfig().withUser("sender@example.org", "sender", "secret"));
 
 	private static MailerProperties.Config mailer(GreenMailExtension server, String from) {
 		Properties props = new Properties();
@@ -113,5 +122,56 @@ class MailerServiceIntegrationTests {
 		for (String original : List.of("alice@gmail.com", "bob@athenarc.gr", "carol@mail.example.org")) {
 			assertFalse(whole.contains(original), "original recipient leaked in clear text");
 		}
+	}
+
+	private static MailerProperties singleMailer(MailerProperties.Config config) {
+		MailerProperties properties = new MailerProperties();
+		properties.getMailer().put("only", config);
+		return properties;
+	}
+
+	private static MailerProperties.Config authenticatedMailer(int port, String password, boolean ssl) {
+		Properties props = new Properties();
+		props.setProperty("mail.transport.protocol", "smtp");
+		props.setProperty("mail.smtp.host", "127.0.0.1");
+		props.setProperty("mail.smtp.port", String.valueOf(port));
+		props.setProperty("mail.smtp.auth", "true");
+		props.setProperty("mail.from", "sender@example.org");
+		if (ssl) {
+			props.setProperty("mail.smtp.ssl.enable", "true");
+			props.setProperty("mail.smtp.ssl.trust", "*");
+			props.setProperty("mail.smtp.ssl.checkserveridentity", "false");
+		}
+		MailerProperties.Config config = new MailerProperties.Config();
+		config.setUsername("sender");
+		config.setPassword(password);
+		config.setProps(props);
+		return config;
+	}
+
+	@Test
+	void authenticatesWithConfiguredCredentials() {
+		new MultiMailerServiceService(singleMailer(authenticatedMailer(authenticated.getSmtp().getPort(), "secret", false)))
+				.sendMail(message("sender@example.org", false));
+
+		assertEquals(3, authenticated.getReceivedMessages().length);
+	}
+
+	@Test
+	void rejectsWrongPassword() {
+		new MultiMailerServiceService(singleMailer(authenticatedMailer(authenticated.getSmtp().getPort(), "wrong", false)))
+				.sendMail(message("sender@example.org", false));
+
+		assertEquals(0, authenticated.getReceivedMessages().length);
+	}
+
+	@Test
+	void deliversOverImplicitTlsWithAuth() throws Exception {
+		new MultiMailerServiceService(singleMailer(authenticatedMailer(tls.getSmtps().getPort(), "secret", true)))
+				.sendMail(message("sender@example.org", false));
+
+		MimeMessage[] received = tls.getReceivedMessages();
+		assertEquals(3, received.length);
+		assertEquals("Hello", received[0].getSubject());
 	}
 }
