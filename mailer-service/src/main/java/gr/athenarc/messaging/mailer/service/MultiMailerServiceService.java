@@ -18,7 +18,15 @@ public class MultiMailerServiceService implements MailerService {
     private final Map<String, Session> sessionMap = new LinkedHashMap<>();
 
 
+    private final MailRedirector redirector;
+
     public MultiMailerServiceService(MailerProperties mailerProperties) {
+        if (mailerProperties.getRedirect().isEnabled()) {
+            redirector = new MailRedirector(mailerProperties.getRedirect());
+            logger.warn("Mail redirect is ACTIVE: all messages are sent to {} configured address(es) instead of their recipients", redirector.targetCount());
+        } else {
+            redirector = null;
+        }
         for (Map.Entry<String, MailerProperties.Config> mailEntry : mailerProperties.getMailer().entrySet()) {
             try {
                 sessionMap.put(mailEntry.getKey(), MailSessionUtils.createSession(mailEntry.getValue()));
@@ -26,6 +34,11 @@ public class MultiMailerServiceService implements MailerService {
                 logger.error("Could not create session for provider: " + mailEntry.getKey(), e);
             }
         }
+    }
+
+    @Override
+    public void sendMail(EmailMessage emailMessage) {
+        MailerService.super.sendMail(redirector != null ? redirector.redirect(emailMessage) : emailMessage);
     }
 
     @Override
