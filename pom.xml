@@ -85,6 +85,23 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.commonjava.maven.plugins</groupId>
+                <artifactId>directory-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>resolve-root-directory</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>highest-basedir</goal>
+                        </goals>
+                        <configuration>
+                            <property>main.basedir</property>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
                 <version>5.0.0</version>
@@ -98,7 +115,7 @@
                 <configuration>
                     <licenseSets>
                         <licenseSet>
-                            <header>${maven.multiModuleProjectDirectory}/license-header.txt</header>
+                            <header>${main.basedir}/license-header.txt</header>
                             <includes>
                                 <include>**/*.java</include>
                             </includes>
