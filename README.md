@@ -2,6 +2,24 @@
 
 A small email-sending service with a Spring Boot client. Applications post a JSON message to the service, which delivers it over SMTP using one of several configured sender accounts.
 
+## Component metadata
+
+| Field | Value |
+|---|---|
+| Component | Mailer (`gr.athenarc.messaging:mailer`) |
+| Type | Supporting service (`mailer-service`), plus a client library (`mailer-client`) |
+| Status | Released (`0.1.0`); `main` is `0.1.1-SNAPSHOT` |
+| Technology | Java 17, Spring Boot 3.5 (Spring MVC, `RestClient`), Jakarta Mail 2.1 (Eclipse Angus), Log4j2, Maven |
+| API | Internal only (one REST endpoint, optional API key) |
+| Swagger | Not applicable (no OpenAPI generation, see [docs/api.md](docs/api.md)) |
+| Deployment | Executable jar or OCI image built with Spring Boot buildpacks |
+| Documentation | [docs/](docs/) |
+
+## Role
+
+Sends the platform's outgoing email. Backend components embed `mailer-client` and call
+`mailer-service`, which relays each message to an SMTP server.
+
 ## Modules
 
 | Module | Description |
@@ -26,12 +44,14 @@ Configure the service location:
 
 ```properties
 mailer.client.host=http://localhost:8080/mailer
+# optional: sent as X-API-Key when the service sets mail.api-key
+mailer.client.api-key=<api-key>
 # optional, defaults shown
 mailer.client.connect-timeout=5s
 mailer.client.read-timeout=10s
 ```
 
-The client auto-configures a `Mailer` bean; inject it and send:
+The client auto-configures a `Mailer` bean unless the application defines its own. Startup fails if `mailer.client.host` is missing. Inject the bean and send:
 
 ```java
 @Service
@@ -55,13 +75,14 @@ public class Notifications {
 
 `EmailMessage` fields: `from`, `to`, `cc`, `bcc`, `subject`, `text`, `html` (`true` sends `text` as HTML).
 
-A failed request (connection error, non-2xx response) surfaces as a Spring `RestClientException`.
+A failed request surfaces as a Spring `RestClientException`. That covers connection errors, an invalid message (400), a wrong API key (401) and an SMTP failure (502).
 
 ### Calling the API directly
 
 ```bash
 curl -X POST http://localhost:8080/mailer/mails \
   -H 'Content-Type: application/json' \
+  -H 'X-API-Key: <api-key>' \
   -d '{
         "from": "no-reply@example.org",
         "to": ["user@example.org"],
@@ -71,7 +92,7 @@ curl -X POST http://localhost:8080/mailer/mails \
       }'
 ```
 
-Returns `201 Created` on success.
+Returns `201 Created` once the SMTP server has accepted the message, `400` for a message without `from` or without a valid recipient, `401` when `mail.api-key` is set and the header doesn't match, and `502` when SMTP delivery fails. See [docs/api.md](docs/api.md).
 
 ## Running the service
 
@@ -90,6 +111,8 @@ Sender accounts are defined under `mail.mailer.<name>.*`; the settings under `pr
 ```properties
 server.port=8080
 server.servlet.context-path=/mailer
+# optional: require this value in the X-API-Key header
+mail.api-key=<api-key>
 
 mail.mailer.example.username=no-reply@example.org
 mail.mailer.example.password=secret
@@ -99,6 +122,8 @@ mail.mailer.example.props.mail.smtp.port=587
 mail.mailer.example.props.mail.smtp.auth=true
 mail.mailer.example.props.mail.smtp.starttls.enable=true
 ```
+
+SMTP connect/read/write timeouts default to 10 s / 30 s / 30 s unless set under `props`. Startup fails if no account is configured.
 
 The sender account for a message is chosen by matching the message's `from` against each account's `mail.from`, or against the account name appearing in `from`. If nothing matches, the first configured account is used.
 
@@ -161,11 +186,20 @@ Spring Boot loads `/config/application.properties` automatically.
 Every Java file carries an Apache 2.0 header, checked during `validate`. After adding or editing files, run:
 
 ```bash
-./mvnw license:format
+./mvnw initialize license:format
 ```
 
 Copyright years are derived from each file's git history, so builds need a full (non-shallow) clone.
 
+## Documentation
+
+- [Architecture](docs/architecture.md) · [Integration](docs/integration.md) · [API](docs/api.md)
+- [Configuration](docs/configuration.md) · [Example configuration](application-example.properties)
+- [Deployment](docs/deployment.md) · [Operations](docs/operations.md) · [Troubleshooting](docs/troubleshooting.md)
+- [Security](docs/security.md) · [Development](docs/development.md) · [Testing](docs/testing.md)
+- [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
+
 ## License
 
-Apache License 2.0. See [LICENSE](LICENSE).
+Apache License 2.0. See [LICENSE](LICENSE). Maintained by the madgeek-arc team
+(<https://github.com/madgeek-arc/mailer>).
