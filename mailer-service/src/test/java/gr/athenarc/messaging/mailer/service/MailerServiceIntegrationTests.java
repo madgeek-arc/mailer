@@ -21,6 +21,7 @@ import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetup;
 import gr.athenarc.messaging.mailer.config.MailerProperties;
 import gr.athenarc.messaging.mailer.domain.EmailMessage;
+import gr.athenarc.messaging.mailer.exception.MailDeliveryException;
 import jakarta.mail.Message;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.Test;
@@ -174,8 +175,9 @@ class MailerServiceIntegrationTests {
 
 	@Test
 	void rejectsWrongPassword() {
-		new MultiMailerServiceService(singleMailer(authenticatedMailer(authenticated.getSmtp().getPort(), "wrong", false)))
-				.sendMail(message("sender@example.org", false));
+		MultiMailerServiceService service =
+				new MultiMailerServiceService(singleMailer(authenticatedMailer(authenticated.getSmtp().getPort(), "wrong", false)));
+		assertThrows(MailDeliveryException.class, () -> service.sendMail(message("sender@example.org", false)));
 
 		assertEquals(0, authenticated.getReceivedMessages().length);
 	}

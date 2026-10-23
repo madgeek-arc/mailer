@@ -49,10 +49,14 @@ public class MultiMailerServiceService implements MailerService {
                 logger.error("Could not create session for provider: " + mailEntry.getKey(), e);
             }
         }
+        if (sessionMap.isEmpty()) {
+            throw new IllegalStateException("No mail account configured. Set at least one mail.mailer.<name>.* block");
+        }
     }
 
     @Override
     public void sendMail(EmailMessage emailMessage) {
+        validate(emailMessage);
         MailerService.super.sendMail(redirector != null ? redirector.redirect(emailMessage) : emailMessage);
     }
 

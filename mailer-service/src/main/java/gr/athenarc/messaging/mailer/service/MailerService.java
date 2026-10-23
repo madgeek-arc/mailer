@@ -16,6 +16,8 @@
 package gr.athenarc.messaging.mailer.service;
 
 import gr.athenarc.messaging.mailer.domain.EmailMessage;
+import gr.athenarc.messaging.mailer.exception.InvalidEmailException;
+import gr.athenarc.messaging.mailer.exception.MailDeliveryException;
 import jakarta.mail.*;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
@@ -38,6 +40,21 @@ public interface MailerService extends Mailer {
 
     Session getSessionFromHost(EmailMessage emailMessage);
 
+    /**
+     * Rejects messages without a sender or without at least one valid recipient.
+     */
+    default void validate(EmailMessage emailMessage) {
+        if (emailMessage == null || emailMessage.getFrom() == null || emailMessage.getFrom().isBlank()) {
+            throw new InvalidEmailException("'from' is required");
+        }
+        int recipients = toAddressArray(emailMessage.getTo()).length
+                + toAddressArray(emailMessage.getCc()).length
+                + toAddressArray(emailMessage.getBcc()).length;
+        if (recipients == 0) {
+            throw new InvalidEmailException("At least one valid recipient (to, cc or bcc) is required");
+        }
+    }
+
     default MimeMessage createMessage(EmailMessage emailMessage) {
         Session session = getSessionFromHost(emailMessage);
         MimeMessage message = new MimeMessage(session);
@@ -54,7 +71,7 @@ public interface MailerService extends Mailer {
                 message.setText(emailMessage.getText() != null ? emailMessage.getText() : "", "utf-8", "html");
             }
         } catch (MessagingException | UnsupportedEncodingException e) {
-            logger.error(e.getMessage(), e);
+            throw new InvalidEmailException("Could not build the message: " + e.getMessage(), e);
         }
 
         return message;
@@ -70,6 +87,7 @@ public interface MailerService extends Mailer {
             Transport.send(message);
         } catch (MessagingException e) {
             logger.error(e.getMessage(), e);
+            throw new MailDeliveryException("Mail delivery failed: " + e.getMessage(), e);
         }
     }
 
