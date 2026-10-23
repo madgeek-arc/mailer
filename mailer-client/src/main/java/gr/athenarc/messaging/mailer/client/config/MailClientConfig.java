@@ -15,6 +15,7 @@
  */
 package gr.athenarc.messaging.mailer.client.config;
 
+import gr.athenarc.messaging.mailer.MailerHeaders;
 import gr.athenarc.messaging.mailer.client.service.MailClient;
 
 import gr.athenarc.messaging.mailer.service.Mailer;
@@ -26,6 +27,7 @@ import org.springframework.boot.http.client.ClientHttpRequestFactorySettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 
 @AutoConfiguration
@@ -40,6 +42,9 @@ public class MailClientConfig {
                 .withConnectTimeout(mailClientProperties.getClient().getConnectTimeout())
                 .withReadTimeout(mailClientProperties.getClient().getReadTimeout());
         ClientHttpRequestFactory requestFactory = ClientHttpRequestFactoryBuilder.detect().build(settings);
+        if (StringUtils.hasText(mailClientProperties.getClient().getApiKey())) {
+            restClientBuilder.defaultHeader(MailerHeaders.API_KEY, mailClientProperties.getClient().getApiKey());
+        }
         RestClient restClient = restClientBuilder.requestFactory(requestFactory).build();
         return new MailClient(mailClientProperties, restClient);
     }

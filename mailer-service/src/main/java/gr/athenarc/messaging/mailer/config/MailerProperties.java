@@ -31,6 +31,7 @@ public class MailerProperties {
     private final Map<String, Config> mailer = new LinkedHashMap<>();
 
     private final Redirect redirect = new Redirect();
+    private String apiKey;
 
     public Map<String, Config> getMailer() {
         return mailer;
@@ -38,6 +39,14 @@ public class MailerProperties {
 
     public Redirect getRedirect() {
         return redirect;
+    }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
     public static class Redirect {
