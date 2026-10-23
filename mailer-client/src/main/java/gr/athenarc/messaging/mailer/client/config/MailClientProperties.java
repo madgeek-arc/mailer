@@ -22,7 +22,7 @@ import java.time.Duration;
 @ConfigurationProperties(value = "mailer")
 public class MailClientProperties {
 
-    private Client client;
+    private Client client = new Client();
 
     public Client getClient() {
         return client;
