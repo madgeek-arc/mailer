@@ -21,6 +21,7 @@ import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetup;
 import gr.athenarc.messaging.mailer.config.MailerProperties;
 import gr.athenarc.messaging.mailer.domain.EmailMessage;
+import gr.athenarc.messaging.mailer.exception.InvalidEmailException;
 import gr.athenarc.messaging.mailer.exception.MailDeliveryException;
 import jakarta.mail.Message;
 import jakarta.mail.internet.MimeMessage;
@@ -190,5 +191,44 @@ class MailerServiceIntegrationTests {
 		MimeMessage[] received = tls.getReceivedMessages();
 		assertEquals(3, received.length);
 		assertEquals("Hello", received[0].getSubject());
+	}
+
+	@Test
+	void rejectsMessageWithoutSender() {
+		MultiMailerServiceService service = new MultiMailerServiceService(properties(false, false));
+
+		assertThrows(InvalidEmailException.class, () -> service.sendMail(message(null, false)));
+		assertThrows(InvalidEmailException.class, () -> service.sendMail(message(" ", false)));
+		assertEquals(0, primary.getReceivedMessages().length);
+	}
+
+	@Test
+	void rejectsMessageWithoutValidRecipients() {
+		EmailMessage message = message("primary@example.org", false);
+		message.setTo(List.of("not an address"));
+		message.setCc(null);
+		message.setBcc(List.of());
+
+		assertThrows(InvalidEmailException.class,
+				() -> new MultiMailerServiceService(properties(true, false)).sendMail(message));
+		assertEquals(0, primary.getReceivedMessages().length);
+	}
+
+	@Test
+	void failsWithoutConfiguredAccounts() {
+		assertThrows(IllegalStateException.class, () -> new MultiMailerServiceService(new MailerProperties()));
+	}
+
+	@Test
+	void appliesDefaultTimeoutsUnlessConfigured() {
+		Properties props = new Properties();
+		props.setProperty("mail.smtp.timeout", "1234");
+
+		Properties effective = MailSessionUtils.withDefaultTimeouts(props);
+
+		assertEquals("1234", effective.getProperty("mail.smtp.timeout"));
+		assertEquals("10000", effective.getProperty("mail.smtp.connectiontimeout"));
+		assertEquals("30000", effective.getProperty("mail.smtp.writetimeout"));
+		assertEquals("30000", effective.getProperty("mail.smtps.timeout"));
 	}
 }
