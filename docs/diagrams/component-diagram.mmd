@@ -1,0 +1,11 @@
+flowchart LR
+    APP["Host application<br/>(embeds mailer-client)"] -- "Mailer#sendMail" --> MC[MailClient]
+    MC -- "HTTP POST /mails (JSON)" --> CTRL
+
+    subgraph SVC[mailer-service]
+        CTRL[MailsController] --> MMS[MultiMailerServiceService]
+        MMS -- "optional" --> RED[MailRedirector]
+        MMS --> SES["Jakarta Mail Sessions<br/>(one per mail.mailer.&lt;name&gt;)"]
+    end
+
+    SES -- "SMTP / SMTPS" --> SMTP[(SMTP server)]

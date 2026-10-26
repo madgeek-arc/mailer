@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gr.athenarc.messaging.mailer.domain;
+package gr.athenarc.messaging.mailer.exception;
 
-import java.util.Date;public class Email {
-    
-    private long id;
-    private EmailMessage message;
-    private Date creationDate;
-    private Date sentDate;
-    private Status status;
-//    private
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.BAD_GATEWAY)
+public class MailDeliveryException extends RuntimeException {
+
+    public MailDeliveryException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

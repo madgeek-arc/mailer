@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gr.athenarc.messaging.mailer.config;
+package gr.athenarc.messaging.mailer;
 
-import org.springframework.context.annotation.Configuration;
+public class MailerHeaders {
 
-@Configuration
-public class MailerConfig {
+    /**
+     * Request header carrying the shared API key.
+     */
+    public static final String API_KEY = "X-API-Key";
+
+    private MailerHeaders() {
+    }
 }

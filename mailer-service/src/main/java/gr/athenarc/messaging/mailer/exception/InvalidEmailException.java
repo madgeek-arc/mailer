@@ -13,10 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gr.athenarc.messaging.mailer.domain;
+package gr.athenarc.messaging.mailer.exception;
 
-public enum Status {
-    QUEUED,
-    SENT,
-    FAILED
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class InvalidEmailException extends RuntimeException {
+
+    public InvalidEmailException(String message) {
+        super(message);
+    }
+
+    public InvalidEmailException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

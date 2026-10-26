@@ -20,7 +20,19 @@ import jakarta.mail.Authenticator;
 import jakarta.mail.PasswordAuthentication;
 import jakarta.mail.Session;
 
+import java.util.Map;
+import java.util.Properties;
+
 public class MailSessionUtils {
+
+    /**
+     * Timeouts (ms) applied to every account unless its {@code props} set them explicitly.
+     */
+    static final Map<String, String> DEFAULT_TIMEOUTS = Map.of(
+            "connectiontimeout", "10000",
+            "timeout", "30000",
+            "writetimeout", "30000"
+    );
 
     public static Session createSession(MailerProperties.Config config) {
 
@@ -30,8 +42,18 @@ public class MailSessionUtils {
             }
         };
 
-        //create the Session object
-        return Session.getInstance(config.getProps(), authenticator);
+        return Session.getInstance(withDefaultTimeouts(config.getProps()), authenticator);
+    }
+
+    static Properties withDefaultTimeouts(Properties props) {
+        Properties result = new Properties();
+        if (props != null) {
+            result.putAll(props);
+        }
+        for (String protocol : new String[]{"smtp", "smtps"}) {
+            DEFAULT_TIMEOUTS.forEach((key, value) -> result.putIfAbsent("mail." + protocol + "." + key, value));
+        }
+        return result;
     }
 
     private MailSessionUtils() {

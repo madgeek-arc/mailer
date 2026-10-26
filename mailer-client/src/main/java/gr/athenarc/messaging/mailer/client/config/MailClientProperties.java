@@ -22,7 +22,7 @@ import java.time.Duration;
 @ConfigurationProperties(value = "mailer")
 public class MailClientProperties {
 
-    private Client client;
+    private Client client = new Client();
 
     public Client getClient() {
         return client;
@@ -36,6 +36,7 @@ public class MailClientProperties {
         private String host;
         private Duration connectTimeout = Duration.ofSeconds(5);
         private Duration readTimeout = Duration.ofSeconds(10);
+        private String apiKey;
 
         public String getHost() {
             return host;
@@ -59,6 +60,14 @@ public class MailClientProperties {
 
         public void setReadTimeout(Duration readTimeout) {
             this.readTimeout = readTimeout;
+        }
+
+        public String getApiKey() {
+            return apiKey;
+        }
+
+        public void setApiKey(String apiKey) {
+            this.apiKey = apiKey;
         }
     }
 }
