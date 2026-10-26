@@ -8,7 +8,6 @@ A small email-sending service with a Spring Boot client. Applications post a JSO
 |---|---|
 | Component | Mailer (`gr.athenarc.messaging:mailer`) |
 | Type | Supporting service (`mailer-service`), plus a client library (`mailer-client`) |
-| Status | Released (`0.1.0`); `main` is `0.1.1-SNAPSHOT` |
 | Technology | Java 17, Spring Boot 3.5 (Spring MVC, `RestClient`), Jakarta Mail 2.1 (Eclipse Angus), Log4j2, Maven |
 | API | Internal only (one REST endpoint, optional API key) |
 | Swagger | Not applicable (no OpenAPI generation, see [docs/api.md](docs/api.md)) |
