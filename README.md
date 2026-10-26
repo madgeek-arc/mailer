@@ -2,18 +2,6 @@
 
 A small email-sending service with a Spring Boot client. Applications post a JSON message to the service, which delivers it over SMTP using one of several configured sender accounts.
 
-## Component metadata
-
-| Field | Value |
-|---|---|
-| Component | Mailer (`gr.athenarc.messaging:mailer`) |
-| Type | Supporting service (`mailer-service`), plus a client library (`mailer-client`) |
-| Technology | Java 17, Spring Boot 3.5 (Spring MVC, `RestClient`), Jakarta Mail 2.1 (Eclipse Angus), Log4j2, Maven |
-| API | Internal only (one REST endpoint, optional API key) |
-| Swagger | Not applicable (no OpenAPI generation, see [docs/api.md](docs/api.md)) |
-| Deployment | Executable jar or OCI image built with Spring Boot buildpacks |
-| Documentation | [docs/](docs/) |
-
 ## Role
 
 Sends the platform's outgoing email. Backend components embed `mailer-client` and call
@@ -91,7 +79,7 @@ curl -X POST http://localhost:8080/mailer/mails \
       }'
 ```
 
-Returns `201 Created` once the SMTP server has accepted the message, `400` for a message without `from` or without a valid recipient, `401` when `mail.api-key` is set and the header doesn't match, and `502` when SMTP delivery fails. See [docs/api.md](docs/api.md).
+Returns `201 Created` once the SMTP server has accepted the message, `400` for a message without `from` or without a valid recipient, `401` when `mail.api-key` is set and the header doesn't match, and `502` when SMTP delivery fails. There's no OpenAPI document; [docs/api.md](docs/api.md) describes the endpoint.
 
 ## Running the service
 
