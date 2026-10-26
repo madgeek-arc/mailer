@@ -87,7 +87,7 @@ can be built, startup fails. (`MultiMailerServiceService` constructor)
 ## Security
 
 Authentication is a single optional shared key, so the API should still be reachable only from trusted
-networks. See [security.md](security.md).
+networks. See [security-model.md](security-model.md).
 
 ## Significant design decisions
 

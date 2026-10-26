@@ -7,7 +7,7 @@ springdoc dependency in `mailer-service/pom.xml`)
 |---|---|
 | Base URL | `http://<host>:<server.port><server.servlet.context-path>`. The repository sets no context path, so the default is `/`. The README examples use `/mailer` |
 | Versioning | None in the path |
-| Authentication | Optional shared key in the `X-API-Key` header, required when `mail.api-key` is set (see [security.md](security.md)) |
+| Authentication | Optional shared key in the `X-API-Key` header, required when `mail.api-key` is set (see [security-model.md](security-model.md)) |
 | Content type | `application/json` |
 
 ## `POST /mails`

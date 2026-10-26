@@ -1,4 +1,4 @@
-# Mailer — Security
+# Mailer — Security model
 
 ## Authentication and authorisation
 

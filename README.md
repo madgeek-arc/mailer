@@ -183,7 +183,7 @@ Copyright years are derived from each file's git history, so builds need a full 
 - [Architecture](docs/architecture.md) · [Integration](docs/integration.md) · [API](docs/api.md)
 - [Configuration](docs/configuration.md) · [Example configuration](application-example.properties)
 - [Deployment](docs/deployment.md) · [Operations](docs/operations.md) · [Troubleshooting](docs/troubleshooting.md)
-- [Security](docs/security.md) · [Development](docs/development.md) · [Testing](docs/testing.md)
+- [Security model](docs/security-model.md) · [Security policy](SECURITY.md) · [Development](docs/development.md) · [Testing](docs/testing.md)
 - [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
 ## License

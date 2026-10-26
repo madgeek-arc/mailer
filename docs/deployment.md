@@ -55,7 +55,7 @@ See the README for a compose example with a mounted properties file.
 ## Production requirements
 
 - Set `mail.api-key`, give the same value to callers as `mailer.client.api-key`, and expose the API on
-  an internal network only ([security.md](security.md)).
+  an internal network only ([security-model.md](security-model.md)).
 - Set `mail.redirect.enabled=false`.
 
 ## Post-deployment verification
