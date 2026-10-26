@@ -23,9 +23,14 @@ Images are built with `spring-boot:build-image` (the POM also declares `native-m
 image build). A CI job outside the repository builds and tags them like this:
 
 ```bash
+mvn -U clean install
 image="docker.madgik.di.uoa.gr/mailer-service:$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout | tail -1 | sed s/-SNAPSHOT//g)"
 mvn -f mailer-service/pom.xml spring-boot:build-image -Dspring-boot.build-image.imageName=${image}
 ```
+
+The image build uses only `mailer-service/pom.xml`, so it takes `mailer-core` from the local Maven
+repository. `install` puts the freshly built modules there; with `package` alone, the build compiles
+against whichever `mailer-core` snapshot was previously installed or downloaded.
 
 ## Deployment options
 
